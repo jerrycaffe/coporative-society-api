@@ -1,4 +1,4 @@
-package com.cooperativeapi;
+package com.cooperativeapi.Corporative.Society.APIz;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
