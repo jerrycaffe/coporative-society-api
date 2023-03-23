@@ -5,7 +5,7 @@ spring:
     banner-mode: console
   datasource:
     url: jdbc:postgresql://localhost:5432/cooperative
-    username: root
+    username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -13,3 +13,4 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+ 
