@@ -1,5 +1,7 @@
 package com.cooperativeapi.auth;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,9 +28,13 @@ public class AuthenticationService {
 
   public AuthenticationResponse register(RegisterRequest request) {
     var user = User.builder()
-        .firstname(request.getFirstname())
-        .lastname(request.getLastname())
+        .firstName(request.getFirstname())
+        .lastName(request.getLastname())
         .email(request.getEmail())
+        .createdAt(LocalDateTime.now())
+        .imgUrl(request.getImgUrl())
+        .dateOfBirth(request.getDateOfBirth())
+        .phoneNumber(request.getPhoneNumber())
         .password(passwordEncoder.encode(request.getPassword()))
         .role(Role.USER)
         .build();

@@ -1,8 +1,12 @@
 package com.cooperativeapi.model;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,19 +32,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "usercredentials")
+@Table(name = "_users")
 public class User implements UserDetails {
 
 
     @Id
-   
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     
-	  private Integer id;
-	  private String firstname;
-	  private String lastname;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	  private UUID id;
+	  private String firstName;
+	  private String lastName;
 	  private String email;
 	  private String password;
+	  private String imgUrl;
+	  private String  dateOfBirth;
+	  private Long phoneNumber;
+	  private boolean emailVerified;
+	  private LocalDateTime createdAt;
+	  private LocalDateTime updatedAt;
+	  
 
 	  @Enumerated(EnumType.STRING)
 	  private Role role;
