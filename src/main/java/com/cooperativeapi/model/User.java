@@ -37,7 +37,6 @@ public class User implements UserDetails {
 
 
     @Id
-    
     @GeneratedValue(strategy = GenerationType.AUTO)
 	  private UUID id;
 	  private String firstName;
