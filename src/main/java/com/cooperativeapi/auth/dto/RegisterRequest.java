@@ -1,4 +1,4 @@
-package com.cooperativeapi.core.auth.dto;
+package com.cooperativeapi.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
