@@ -1,4 +1,4 @@
-package com.cooperativeapi.auth.model;
+package com.cooperativeapi.model;
 
 import com.cooperativeapi.model.Role;
 

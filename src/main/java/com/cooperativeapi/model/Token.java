@@ -1,4 +1,4 @@
-package com.cooperativeapi.auth.model;
+package com.cooperativeapi.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
