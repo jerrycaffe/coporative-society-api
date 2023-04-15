@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.flywaydb.core.internal.parser.TokenType;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,20 +24,19 @@ public class Token {
 
     @Id
     @GeneratedValue
-    public Integer id;
+    private Integer id;
 
     @Column(unique = true)
-    public String token;
+    private String token;
 
-    @Enumerated(EnumType.STRING)
-    public TokenType tokenType = TokenType.BEARER;
+   private LocalDateTime createdAt;
+   private LocalDateTime expiresAt;
+   private LocalDateTime validatedAt;
 
-    public boolean revoked;
 
-    public boolean expired;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    public User user;
+    @JoinColumn(name = "userid", nullable = false)
+    private User user;
 }
 

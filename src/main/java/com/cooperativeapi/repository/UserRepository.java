@@ -1,7 +1,8 @@
 package com.cooperativeapi.repository;
 
-import com.cooperativeapi.auth.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.cooperativeapi.model.User;
 
 import java.util.Optional;
 
