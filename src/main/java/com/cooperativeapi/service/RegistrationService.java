@@ -1,16 +1,19 @@
 package com.cooperativeapi.service;
 
-import org.springframework.security.core.userdetails.User;
+import com.cooperativeapi.dto.RegisterDto;
+import com.cooperativeapi.model.Role;
+import com.cooperativeapi.model.Token;
+import com.cooperativeapi.model.User;
+import com.cooperativeapi.repository.TokenRepository;
+import com.cooperativeapi.repository.UserRepository;
+import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.cooperativeapi.dto.RegisterDto;
-import com.cooperativeapi.model.Role;
-import com.cooperativeapi.repository.TokenRepository;
-import com.cooperativeapi.repository.UserRepository;
-
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +35,7 @@ public class RegistrationService {
 		// encode the password
 		String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
 		
-		// transform - ap teh registerdto to user dto
+		// transform - map the registerdto to user dto
 		User user = User.builder()
 				.firstname(registerDto.getFirstname())
 				.lastname(registerDto.getLastname())
@@ -43,7 +46,53 @@ public class RegistrationService {
 				
 			// save the user
 		User savedUser = repository.save(user);
-		return null;
+		// Generate a token
+		String generatedToken =UUID.randomUUID().toString();
+		Token token = Token.builder()
+				.token(generatedToken)
+				.createdAt(LocalDateTime.now())
+				.expiresAt(LocalDateTime.now().plusMinutes(10))
+				.user(savedUser)
+				.build();
+		tokenRepository.save(token);
+		// send the confirmation email
+		try {
+			emailService.send(registerDto.getEmail(),registerDto.getFirstname(),registerDto.getLastname(),
+					String.format(CONFIRMATION_URL, generatedToken));
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		return generatedToken;
+		
+	}
+	public String confirm(String token) {
+		// get the token
+		Token savedToken = tokenRepository.findByToken(token)
+				.orElseThrow(()-> new IllegalStateException("Token not found"));
+		if(LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
+			// generate a token
+			String generatedToken = UUID.randomUUID().toString();
+			Token newToken =Token.builder()
+					.token(generatedToken)
+					.createdAt(LocalDateTime.now())
+					.expiresAt(LocalDateTime.now().plusMinutes(10))
+					.user(savedToken.getUser())
+					.build();
+				tokenRepository.save(newToken);
+				try {
+					emailService.send(
+							savedToken.getUser().getEmail(),
+							savedToken.getUser().getFirstname(),
+							savedToken.getUser().getLastname(),
+					String.format(CONFIRMATION_URL,generatedToken)
+					);
+				} catch (MessagingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return "Token expired , a new token has been sent to your Email";
 	}
 }

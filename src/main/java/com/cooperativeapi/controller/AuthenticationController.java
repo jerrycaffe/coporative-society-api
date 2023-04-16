@@ -1,15 +1,16 @@
 package com.cooperativeapi.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.cooperativeapi.dto.RegisterDto;
 import com.cooperativeapi.service.RegistrationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
-    private final RegistrationService service;
+	@Autowired
+    private  RegistrationService service;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(
