@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS status
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE
 );
-CREATE TABLE IF NOT EXISTS users
+CREATE TABLE IF NOT EXISTS _users
 (
     id         UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     first_name CHARACTER varying,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS users
     CONSTRAINT fk_users_status FOREIGN KEY (status) REFERENCES status(id) ON UPDATE CASCADE ON DELETE CASCADE
 
 );
-CREATE INDEX IF NOT EXISTS users_email_idx ON users (email);
+CREATE INDEX IF NOT EXISTS users_email_idx ON _users (email);
 
 
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS users_roles
     user_id UUID NOT NULL,
     role_id UUID NOT NULL,
     CONSTRAINT pk_users_roles_user_id_role_id PRIMARY KEY (user_id, role_id),
-    CONSTRAINT fk_users_roles_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_users_roles_user_id FOREIGN KEY (user_id) REFERENCES _users(id) ON DELETE CASCADE,
     CONSTRAINT fk_users_roles_role_id FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS users_tokens (
     updated_at TIMESTAMP WITH TIME ZONE,
     expire_on TIMESTAMP WITH TIME ZONE,
 
-    CONSTRAINT fk_users_token_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT fk_users_token_user_id FOREIGN KEY (user_id) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS banks
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS bank_accounts
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
     CONSTRAINT fk_bank_accounts_banks_id FOREIGN KEY (bank_id) REFERENCES banks(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_bank_accounts_users_id FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT fk_bank_accounts_users_id FOREIGN KEY (user_id) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS countries
 (
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS user_locations
     state CHARACTER VARYING,
     country_id UUID NOT NULL,
     postal_code CHARACTER VARYING,
-    CONSTRAINT fk_locations_users_id FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_locations_users_id FOREIGN KEY (user_id) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_locations_countries_id FOREIGN KEY (country_id) REFERENCES countries(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -161,8 +161,8 @@ CREATE TABLE IF NOT EXISTS complaints
     status UUID NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
-    CONSTRAINT fk_complaints_processed_by FOREIGN KEY (processed_by) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_complaints_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_complaints_processed_by FOREIGN KEY (processed_by) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_complaints_user_id FOREIGN KEY (user_id) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_complaints_status FOREIGN KEY (status) REFERENCES status(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS categories
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS items
     category UUID NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
-    CONSTRAINT fk_items_created_by FOREIGN KEY (created_by) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_items_created_by FOREIGN KEY (created_by) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_items_category FOREIGN KEY (category) REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_items_status FOREIGN KEY (status) REFERENCES status(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_items_interest_id FOREIGN KEY (interest_id) REFERENCES interests_rates(id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -224,8 +224,8 @@ CREATE TABLE IF NOT EXISTS savings
     description character varying,
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
-    CONSTRAINT fk_savings_updated_by FOREIGN KEY (updated_by) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_savings_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT fk_savings_updated_by FOREIGN KEY (updated_by) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_savings_user_id FOREIGN KEY (user_id) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS purchases
@@ -238,8 +238,8 @@ CREATE TABLE IF NOT EXISTS purchases
     processed_by UUID NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
-    CONSTRAINT fk_purchases_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_purchases_processed_by FOREIGN KEY (processed_by) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_purchases_user_id FOREIGN KEY (user_id) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_purchases_processed_by FOREIGN KEY (processed_by) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_purchases_status FOREIGN KEY (status) REFERENCES status(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -263,8 +263,8 @@ CREATE TABLE IF NOT EXISTS purchases_deductions
     updated_by UUID NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
-     CONSTRAINT fk_purchases_deductions_updated_by FOREIGN KEY (updated_by) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_purchases_deductions_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+     CONSTRAINT fk_purchases_deductions_updated_by FOREIGN KEY (updated_by) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_purchases_deductions_user_id FOREIGN KEY (user_id) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_purchases_deductions_purchase_id FOREIGN KEY (purchase_id) REFERENCES purchases(id) ON DELETE CASCADE
 );
 
@@ -282,9 +282,9 @@ CREATE TABLE IF NOT EXISTS loans
     comment character varying,
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
-    CONSTRAINT fk_loans_processed_by FOREIGN KEY (processed_by) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_loans_processed_by FOREIGN KEY (processed_by) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
      CONSTRAINT fk_loans_interest_id FOREIGN KEY (interest_id) REFERENCES interests_rates(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_loans_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT fk_loans_user_id FOREIGN KEY (user_id) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS loans_deductions
 (
@@ -295,7 +295,7 @@ CREATE TABLE IF NOT EXISTS loans_deductions
     amount CHARACTER VARYING NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
-    CONSTRAINT fk_purchases_deductions_updated_by FOREIGN KEY (updated_by) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_loans_deductions_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_purchases_deductions_updated_by FOREIGN KEY (updated_by) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_loans_deductions_user_id FOREIGN KEY (user_id) REFERENCES _users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_loans_deductions_loan_id FOREIGN KEY (loan_id) REFERENCES loans(id) ON DELETE CASCADE
 );
