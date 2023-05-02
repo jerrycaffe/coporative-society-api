@@ -1,5 +1,5 @@
 package com.cooperativeapi.model;
 
 public enum Role {
-USER,ADMIN,SUPERADMIN
+ROLE_USER,ROLE_ADMIN,ROLE_SUPERADMIN
 }
