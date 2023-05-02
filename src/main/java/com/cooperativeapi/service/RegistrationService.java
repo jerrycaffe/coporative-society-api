@@ -19,11 +19,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RegistrationService {
 
-	private static final String CONFIRMATION_URL = "http://localhost:8082/api/v1/auth/confirm?token=%s";
+	private static final String CONFIRMATION_URL = "http://localhost:8085/api/v1/authentication/confirm?token=%s";
 	private final TokenRepository tokenRepository;
 	private final UserRepository repository;
 	private final PasswordEncoder passwordEncoder;
 	private final EmailService emailService;
+	
 	
 	@Transactional
 	public String register(RegisterDto registerDto) {
@@ -41,7 +42,7 @@ public class RegistrationService {
 				.lastname(registerDto.getLastname())
 				.email(registerDto.getEmail())
 				.password(encodedPassword)
-				.role(Role.USER)
+				.role(Role.ROLE_USER)
 				.build();
 				
 			// save the user
@@ -93,6 +94,6 @@ public class RegistrationService {
 					e.printStackTrace();
 				}
 		}
-		return "Token expired , a new token has been sent to your Email";
+		return "<h1>Your account has been successfully activated</h1>";
 	}
 }

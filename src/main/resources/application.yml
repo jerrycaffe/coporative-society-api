@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8085
 spring:
   main:
     banner-mode: console
@@ -17,18 +17,19 @@ spring:
     open-in-view: false
     generate-ddl: true
     # java mail properties
-    mail:
+  mail:
      host: localhost
      port: 1025
-     username: habay
-     password: habay
-    properties:
+    # username: habay
+    # password: habay
+  properties:
       mail:
         smtp:
           trust: "*"
-        auth: true
+        auth: false
         starttls:
-          enabled: true
+          enabled: false
         connectiontimeout: 5000
         timeout: 3000
         writetimeout: 5000
+        default-encodig: UTF-8
